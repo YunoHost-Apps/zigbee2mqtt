@@ -48,7 +48,6 @@ ram.runtime = "50M"
     default = "/dev/ttyUSB0"
     help.en = "See also: https://www.zigbee2mqtt.io/guide/configuration/adapter-settings.html - Use 'ls /dev/serial/by-id/*' to find the correct serial port."
 
-
 [resources]
     [resources.sources.main]
     url = "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/1.42.0.tar.gz"
