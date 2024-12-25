@@ -25,7 +25,6 @@ Allows you to use your Zigbee devices without the vendor's bridge or gateway. It
 ## Documentations et ressources
 
 - Documentation officielle utilisateur : <https://github.com/Koenkk/zigbee2mqtt>
-- Documentation officielle de l’admin : <https://github.com/YunoHost-Apps/zigbee2mqtt_ynh>
 - Dépôt de code officiel de l’app : <https://github.com/YunoHost-Apps/zigbee2mqtt_ynh>
 - YunoHost Store : <https://apps.yunohost.org/app/zigbee2mqtt>
 - Signaler un bug : <https://github.com/YunoHost-Apps/zigbee2mqtt_ynh/issues>
