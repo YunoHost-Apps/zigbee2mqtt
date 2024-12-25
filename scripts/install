@@ -28,11 +28,10 @@ source /usr/share/yunohost/helpers
 # or 'example__2', '__3', ... for multi-instance installs)
 #
 
-
 #=================================================
 # NODE ENVIRONMENT
 #=================================================
-ynh_script_progression --message="Create and setup environment..." --weight=45
+ynh_script_progression "Create and setup environment..."
 
 # Download, check integrity, uncompress "[resources.sources.main]" archive:
 ynh_setup_source --dest_dir="$install_dir"
@@ -42,46 +41,44 @@ myynh_setup_node_environment
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..."
+ynh_script_progression "Integrating service in YunoHost..."
 
 yunohost service add $app
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-ynh_script_progression --message="Set file permissions..."
+ynh_script_progression "Set file permissions..."
 myynh_fix_file_permissions
 
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Configuring systemd service '$app'..." --weight=5
+ynh_script_progression "Configuring systemd service '$app'..."
 
 # https://yunohost.org/en/packaging_apps_helpers#ynh-add-systemd-config
 # https://github.com/YunoHost/yunohost/blob/dev/helpers/systemd
-ynh_add_systemd_config --service=$app --template="systemd.service"
+ynh_config_add_systemd
 
 #=================================================
 # Start the app server via systemd
 #=================================================
-ynh_script_progression --message="Starting systemd service '$app'..." --weight=5
+ynh_script_progression "Starting systemd service '$app'..."
 
-ynh_systemd_action --service_name=$app --action="start"
+ynh_systemctl --service=$app --action="start"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring nginx web server..."
+ynh_script_progression "Configuring nginx web server..."
 
 # Create a dedicated nginx config
 # https://yunohost.org/en/contribute/packaging_apps/helpers
 # https://github.com/YunoHost/yunohost/blob/dev/helpers/nginx
-ynh_add_nginx_config "public_path" "port"
+ynh_config_add_nginx "public_path" "port"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"

@@ -8,18 +8,16 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping systemd service '$app'..." --weight=5
+ynh_script_progression "Stopping systemd service '$app'..."
 
-ynh_systemd_action --service_name=$app --action="stop"
+ynh_systemctl --service=$app --action="stop"
 
 #=================================================
 # NODE ENVIRONMENT
 #=================================================
-ynh_script_progression --message="Create and setup environment..." --weight=45
+ynh_script_progression "Create and setup environment..."
 
 # Download, check integrity, uncompress "[resources.sources.main]" archive:
 ynh_setup_source --dest_dir="$install_dir"
@@ -29,29 +27,26 @@ myynh_setup_node_environment
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Configuring systemd service '$app'..." --weight=5
+ynh_script_progression "Configuring systemd service '$app'..."
 
-ynh_add_systemd_config --service=$app --template="systemd.service"
+ynh_config_add_systemd
 
-
-#=================================================
-# GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-ynh_script_progression --message="Set file permissions..."
+ynh_script_progression "Set file permissions..."
 myynh_fix_file_permissions
 
 #=================================================
 # Start the app server via systemd
 #=================================================
-ynh_script_progression --message="Starting systemd service '$app'..." --weight=5
+ynh_script_progression "Starting systemd service '$app'..."
 
 yunohost service add $app
-ynh_systemd_action --service_name=$app --action="start"
+ynh_systemctl --service=$app --action="start"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"

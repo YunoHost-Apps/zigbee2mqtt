@@ -10,7 +10,7 @@ Environment="ZIGBEE2MQTT_CONFIG_FRONTEND_PORT=__PORT__"
 Environment="ZIGBEE2MQTT_CONFIG_SERIAL_PORT=__SERIAL_PORT__"
 
 # Set YunoHost settings:
-Environment="__YNH_NODE_LOAD_PATH__"
+Environment="PATH=__PATH_WITH_NODEJS__"
 
 User=__APP__
 Group=__APP__

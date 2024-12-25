@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #=================================================
-# COMMON VARIABLES
+# COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
 nodejs_version=20
@@ -15,28 +15,25 @@ myynh_fix_file_permissions() {
         set -x
 
         # /var/www/$app/
-        chown -c -R "$app:www-data" "$install_dir"
-        chmod -c o-rwx "$install_dir"
+        #REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -c -R "$app:www-data" "$install_dir"
+        #REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -c o-rwx "$install_dir"
     )
 }
 
 myynh_setup_node_environment() {
 
-    ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
+    ynh_nodejs_install
 
     pushd "$install_dir" || exit
-        ynh_use_nodejs
 
         myynh_fix_file_permissions
 
         # https://www.zigbee2mqtt.io/guide/installation/01_linux.html#installing
-        ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm --version
-        ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm ci
-        ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm run build
+        ynh_hide_warnings ynh_exec_as_app node_load_PATH npm --version
+        ynh_hide_warnings ynh_exec_as_app node_load_PATH npm ci
+        ynh_hide_warnings ynh_exec_as_app node_load_PATH npm run build
 
         myynh_fix_file_permissions
 
     popd || exit
 }
-
-
