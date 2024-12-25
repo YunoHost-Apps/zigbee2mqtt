@@ -1,0 +1,44 @@
+<!--
+Este archivo README esta generado automaticamente<https://github.com/YunoHost/apps/tree/master/tools/readme_generator>
+No se debe editar a mano.
+-->
+
+# Zigbee2MQTT para Yunohost
+
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/zigbee2mqtt)](https://ci-apps.yunohost.org/ci/apps/zigbee2mqtt/)
+![Estado funcional](https://apps.yunohost.org/badge/state/zigbee2mqtt)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/zigbee2mqtt)
+
+[![Instalar Zigbee2MQTT con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=zigbee2mqtt)
+
+*[Leer este README en otros idiomas.](./ALL_README.md)*
+
+> *Este paquete le permite instalarZigbee2MQTT rapidamente y simplement en un servidor YunoHost.*  
+> *Si no tiene YunoHost, visita [the guide](https://yunohost.org/install) para aprender como instalarla.*
+
+## Descripción general
+
+Allows you to use your Zigbee devices without the vendor's bridge or gateway. It bridges events and allows you to control your Zigbee devices via MQTT. In this way you can integrate your Zigbee devices with whatever smart home infrastructure you are using. 
+
+
+**Versión actual:** 1.42.0~ynh1
+## Documentaciones y recursos
+
+- Documentación usuario oficial: <https://github.com/Koenkk/zigbee2mqtt>
+- Repositorio del código fuente oficial de la aplicación : <https://github.com/YunoHost-Apps/zigbee2mqtt_ynh>
+- Catálogo YunoHost: <https://apps.yunohost.org/app/zigbee2mqtt>
+- Reportar un error: <https://github.com/YunoHost-Apps/zigbee2mqtt_ynh/issues>
+
+## Información para desarrolladores
+
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/zigbee2mqtt_ynh/tree/testing).
+
+Para probar la rama `testing`, sigue asÍ:
+
+```bash
+sudo yunohost app install https://github.com/YunoHost-Apps/zigbee2mqtt_ynh/tree/testing --debug
+o
+sudo yunohost app upgrade zigbee2mqtt -u https://github.com/YunoHost-Apps/zigbee2mqtt_ynh/tree/testing --debug
+```
+
+**Mas informaciones sobre el empaquetado de aplicaciones:** <https://yunohost.org/packaging_apps>

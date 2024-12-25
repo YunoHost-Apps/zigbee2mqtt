@@ -16,3 +16,6 @@ __pycache__
 
 secret.txt
 /local_test/
+*~
+*.sw[op]
+.DS_Store

@@ -1,87 +1,63 @@
 #!/bin/bash
 
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
-# Install parameters are automatically saved as settings
-#
-# Settings are automatically loaded as bash variables
-# in every app script context, therefore typically these will exist:
-# - $domain
-# - $path
-# - $language
-# ... etc
-#
-# Resources defined in the manifest are provisioned prior to this script
-# and corresponding settings are also available, such as:
-# - $install_dir
-# - $port
-# - $db_name
-# ...
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+ynh_script_progression "Installing dependencies..."
 
-#
-# $app is the app id (i.e. 'example' for first install,
-# or 'example__2', '__3', ... for multi-instance installs)
-#
-
+ynh_nodejs_install
 
 #=================================================
 # NODE ENVIRONMENT
 #=================================================
-ynh_script_progression --message="Create and setup environment..." --weight=45
+ynh_script_progression "Create and setup environment..."
 
-# Download, check integrity, uncompress "[resources.sources.main]" archive:
 ynh_setup_source --dest_dir="$install_dir"
 
-myynh_setup_node_environment
+#=================================================
+# APP INITIAL CONFIGURATION
+#=================================================
+ynh_script_progression "Adding $app's configuration files..."
+
+ynh_config_add --template="configuration.yml" --destination="$install_dir/data/configuration.yml"
+
+#chmod 400 "$install_dir/configuration.yml"
+#chown "$app:$app" "$install_dir/configuration.yml"
 
 #=================================================
-# INTEGRATE SERVICE IN YUNOHOST
+# SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..."
+ynh_script_progression "Adding system configurations related to $app..."
 
-yunohost service add $app
+ynh_config_add_nginx
 
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression --message="Set file permissions..."
-myynh_fix_file_permissions
+ynh_config_add_systemd
+
+yunohost service add "$app" --description="Zigbee to MQTT bridge" --log="/var/log/$app/$app.log"
 
 #=================================================
-# SETUP SYSTEMD
+# INSTALL APP
 #=================================================
-ynh_script_progression --message="Configuring systemd service '$app'..." --weight=5
+ynh_script_progression "Installing $app..."
 
-# https://yunohost.org/en/packaging_apps_helpers#ynh-add-systemd-config
-# https://github.com/YunoHost/yunohost/blob/dev/helpers/systemd
-ynh_add_systemd_config --service=$app --template="systemd.service"
+pushd "$install_dir"
+	ynh_hide_warnings ynh_exec_as_app npm --version
+	ynh_hide_warnings ynh_exec_as_app npm ci
+	ynh_hide_warnings ynh_exec_as_app npm run build
+popd
 
 #=================================================
 # Start the app server via systemd
 #=================================================
-ynh_script_progression --message="Starting systemd service '$app'..." --weight=5
+ynh_script_progression "Starting systemd service '$app'..."
 
-ynh_systemd_action --service_name=$app --action="start"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Configuring nginx web server..."
-
-# Create a dedicated nginx config
-# https://yunohost.org/en/contribute/packaging_apps/helpers
-# https://github.com/YunoHost/yunohost/blob/dev/helpers/nginx
-ynh_add_nginx_config "public_path" "port"
+ynh_systemctl --service=$app --action="start"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
