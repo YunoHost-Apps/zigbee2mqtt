@@ -1,0 +1,26 @@
+# Minimal configuration.yml example
+permit_join: true
+
+mqtt:
+    server: mqtt://127.0.0.1:__PORT__
+
+serial:
+    # Could be either USB port (/dev/ttyUSB0), network Zigbee adapters (tcp://192.168.1.1:6638) or mDNS adapter (mdns://my-adapter).
+    port: /dev/ttyUSB0
+
+frontend:
+    # Optional, default 8080
+    port: __PORT__
+    # Optional, empty by default to listen on both IPv4 and IPv6. Opens a unix socket when given a path instead of an address (e.g. '/run/zigbee2mqtt/zigbee2mqtt.sock')
+    # Don't set this if you use Docker or the Home Assistant add-on unless you're sure the chosen IP is available inside the container
+    host: 127.0.0.1
+    # Optional, enables authentication, disabled by default, cleartext (no hashing required)
+    #auth_token: your-secret-token
+    # Optional, url on which the frontend can be reached, currently only used for the Home Assistant device configuration page
+    url: 'https://__DOMAIN__'
+    # Optional, certificate file path for exposing HTTPS. The sibling property 'ssl_key' must be set for HTTPS to be activated
+    #ssl_cert: /config/etc/letsencrypt/live/mydomain.com/fullchain.pem
+    # Optional, private key file path for exposing HTTPS. The sibling property 'ssl_cert' must be set for HTTPS to be activated
+    #ssl_key: /config/etc/letsencrypt/live/mydomain.com/privkey.pem
+    # Optional, base URL for the frontend, when served from a subpath, e.g. behind the proxy. Default value is '/'
+    base_url: __PATH__
