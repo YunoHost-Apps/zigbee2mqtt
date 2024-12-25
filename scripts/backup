@@ -9,7 +9,6 @@ ynh_print_info "Declaring files to be backed up..."
 # BACKUP THE APP MAIN DIR
 #=================================================
 
-# /var/www/$app/
 ynh_backup "$install_dir"
 
 #=================================================
@@ -17,14 +16,6 @@ ynh_backup "$install_dir"
 #=================================================
 
 ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
-
-#=================================================
-# SPECIFIC BACKUP
-#=================================================
-
-#=================================================
-# BACKUP SYSTEMD
-#=================================================
 
 ynh_backup "/etc/systemd/system/$app.service"
 

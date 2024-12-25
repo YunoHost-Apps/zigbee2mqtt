@@ -4,42 +4,22 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# STANDARD REMOVE
+# REMOVE SYSTEM CONFIGURATIONS
 #=================================================
-# REMOVE SERVICE FROM ADMIN PANEL
-#=================================================
+ynh_script_progression "Removing system configurations related to $app..."
 
-# Remove a service from the admin panel, added by `yunohost service add`
-if yunohost service status $app >/dev/null 2>&1
-then
-	ynh_script_progression "Removing $app service integration..."
-	yunohost service remove $app
+if ynh_hide_warnings yunohost service status "$app" >/dev/null; then
+    yunohost service remove "$app"
 fi
-
-#=================================================
-# STOP SERVICES
-#=================================================
-ynh_script_progression "Stopping and removing systemd service '$app'..."
 
 ynh_config_remove_systemd
 
-#=================================================
-# REMOVE APP MAIN DIR
-#=================================================
-ynh_script_progression "Removing app main directory..."
-
-# /home/yunohost.app/$app/
-ynh_safe_rm "$install_dir"
-
-#=================================================
-# REMOVE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression "Removing nginx web server configuration..."
-
-# Remove the dedicated nginx config
 ynh_config_remove_nginx
+
+ynh_nodejs_remove
 
 #=================================================
 # END OF SCRIPT
 #=================================================
+
 ynh_script_progression "Removal of $app completed"

@@ -4,66 +4,39 @@ source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# STANDARD RESTORATION STEPS
-#=================================================
-# RESTORE THE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression "Restoring the NGINX web server configuration..."
-
-ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
-
-#=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression "Restoring $app  main directory..."
+ynh_script_progression "Restoring the app main directory..."
 
 ynh_restore "$install_dir"
 
-ynh_script_progression "Set file permissions..."
-myynh_fix_file_permissions
+#=================================================
+# REINSTALL DEPENDENCIES
+#=================================================
+ynh_script_progression "Reinstalling dependencies..."
+
+ynh_nodejs_install
 
 #=================================================
-# NODE ENVIRONMENT
-# Maybe the backup contains a other Python version
+# RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression "Create and setup environment..."
+ynh_script_progression "Restoring system configurations related to $app..."
 
-myynh_setup_node_environment
-
-#=================================================
-# RESTORE SYSTEMD
-#=================================================
-ynh_script_progression "Restoring the systemd $app configuration..."
+ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 ynh_restore "/etc/systemd/system/$app.service"
-systemctl enable $app.service --quiet
+systemctl enable "$app.service" --quiet
+
+yunohost service add "$app" --description="A short description of the app" --log="/var/log/$app/$app.log"
 
 #=================================================
-# INTEGRATE SERVICE IN YUNOHOST
+# RELOAD NGINX AND PHP-FPM OR THE APP SERVICE
 #=================================================
-ynh_script_progression "Integrating service in YunoHost..."
+ynh_script_progression "Reloading NGINX web server and $app's service..."
 
-yunohost service add $app
+ynh_systemctl --service="$app" --action="start" --log_path="systemd"
 
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression "Set file permissions..."
-myynh_fix_file_permissions
-
-#=================================================
-# START PYINVENTORY
-#=================================================
-ynh_script_progression "Starting systemd service '$app'..."
-
-ynh_systemctl --service=$app --action="start"
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression "Reloading nginx web server..."
-
-ynh_systemctl --service="nginx" --action="reload"
+ynh_systemctl --service=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

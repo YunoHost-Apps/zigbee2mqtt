@@ -1,49 +1,57 @@
 #!/bin/bash
 
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression "Stopping systemd service '$app'..."
+ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemctl --service=$app --action="stop"
-
-#=================================================
-# NODE ENVIRONMENT
-#=================================================
-ynh_script_progression "Create and setup environment..."
-
-# Download, check integrity, uncompress "[resources.sources.main]" archive:
-ynh_setup_source --dest_dir="$install_dir"
-
-myynh_setup_node_environment
+ynh_systemctl --service="$app" --action="stop"
 
 #=================================================
-# SETUP SYSTEMD
+# INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression "Configuring systemd service '$app'..."
+ynh_script_progression "Installing dependencies..."
+
+ynh_nodejs_install
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression "Upgrading source files..."
+
+ynh_setup_source --dest_dir="$install_dir" --full_replace
+
+#=================================================
+# REAPPLY SYSTEM CONFIGURATIONS
+#=================================================
+ynh_script_progression "Upgrading system configurations related to $app..."
+
+ynh_config_add_nginx
 
 ynh_config_add_systemd
 
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression "Set file permissions..."
-myynh_fix_file_permissions
+yunohost service add "$app" --description="Documentation tool for creativity" --log="/var/log/$app/$app.log"
 
 #=================================================
-# Start the app server via systemd
+# INSTALL APP
 #=================================================
-ynh_script_progression "Starting systemd service '$app'..."
+ynh_script_progression "Installing the app..."
 
-yunohost service add $app
-ynh_systemctl --service=$app --action="start"
+pushd "$install_dir"
+	ynh_hide_warnings ynh_exec_as_app npm --version
+	ynh_hide_warnings ynh_exec_as_app npm ci
+	ynh_hide_warnings ynh_exec_as_app npm run build
+popd
+
+#=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression "Starting $app's systemd service..."
+
+ynh_systemctl --service="$app" --action="start"
 
 #=================================================
 # END OF SCRIPT

@@ -1,64 +1,50 @@
 #!/bin/bash
 
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
-# Install parameters are automatically saved as settings
-#
-# Settings are automatically loaded as bash variables
-# in every app script context, therefore typically these will exist:
-# - $domain
-# - $path
-# - $language
-# ... etc
-#
-# Resources defined in the manifest are provisioned prior to this script
-# and corresponding settings are also available, such as:
-# - $install_dir
-# - $port
-# - $db_name
-# ...
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+ynh_script_progression "Installing dependencies..."
 
-#
-# $app is the app id (i.e. 'example' for first install,
-# or 'example__2', '__3', ... for multi-instance installs)
-#
+ynh_nodejs_install
 
 #=================================================
 # NODE ENVIRONMENT
 #=================================================
 ynh_script_progression "Create and setup environment..."
 
-# Download, check integrity, uncompress "[resources.sources.main]" archive:
 ynh_setup_source --dest_dir="$install_dir"
-
-myynh_setup_node_environment
-
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression "Integrating service in YunoHost..."
-
-yunohost service add $app
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
 ynh_script_progression "Set file permissions..."
+
 myynh_fix_file_permissions
 
 #=================================================
-# SETUP SYSTEMD
+# SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression "Configuring systemd service '$app'..."
+ynh_script_progression "Adding system configurations related to $app..."
 
-# https://yunohost.org/en/packaging_apps_helpers#ynh-add-systemd-config
-# https://github.com/YunoHost/yunohost/blob/dev/helpers/systemd
+ynh_config_add_nginx
+
 ynh_config_add_systemd
+
+yunohost service add "$app" --description="A short description of the app" --log="/var/log/$app/$app.log"
+
+#=================================================
+# INSTALL APP
+#=================================================
+ynh_script_progression "Installing the app..."
+
+pushd "$install_dir"
+	ynh_hide_warnings ynh_exec_as_app npm --version
+	ynh_hide_warnings ynh_exec_as_app npm ci
+	ynh_hide_warnings ynh_exec_as_app npm run build
+popd
 
 #=================================================
 # Start the app server via systemd
@@ -66,16 +52,6 @@ ynh_config_add_systemd
 ynh_script_progression "Starting systemd service '$app'..."
 
 ynh_systemctl --service=$app --action="start"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression "Configuring nginx web server..."
-
-# Create a dedicated nginx config
-# https://yunohost.org/en/contribute/packaging_apps/helpers
-# https://github.com/YunoHost/yunohost/blob/dev/helpers/nginx
-ynh_config_add_nginx "public_path" "port"
 
 #=================================================
 # END OF SCRIPT
