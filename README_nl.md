@@ -18,18 +18,10 @@ Hij mag NIET handmatig aangepast worden.
 
 ## Overzicht
 
-[Zigbee2MQTT](https://www.zigbee2mqtt.io) as YunoHost package
-
-## Prerequisites
-
-Note:
-
-A [Supported Zigbee Adapter](https://www.zigbee2mqtt.io/guide/adapters/) is needed, e.g. a CC2652 USB Stick.
+Allows you to use your Zigbee devices without the vendor's bridge or gateway. It bridges events and allows you to control your Zigbee devices via MQTT. In this way you can integrate your Zigbee devices with whatever smart home infrastructure you are using. 
 
 
-
-
-**Geleverde versie:** 1.35.1~ynh1
+**Geleverde versie:** 1.42.0~ynh1
 ## Documentatie en bronnen
 
 - Officiele gebruikersdocumentatie: <https://github.com/Koenkk/zigbee2mqtt>
