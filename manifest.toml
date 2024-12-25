@@ -16,7 +16,7 @@ userdoc = "https://github.com/Koenkk/zigbee2mqtt"
 code = "https://github.com/YunoHost-Apps/zigbee2mqtt_ynh"
 
 [integration]
-yunohost = ">=12.0.9"
+yunohost = ">= 12.0.9"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
@@ -36,10 +36,6 @@ ram.runtime = "50M"
     [install.path]
     type = "path"
     default = "/zigbee2mqtt"
-
-    [install.admin]
-    type = "user"
-    default = "admin"
 
     [install.init_main_permission]
     type = "group"
