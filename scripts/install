@@ -18,13 +18,6 @@ ynh_script_progression "Create and setup environment..."
 ynh_setup_source --dest_dir="$install_dir"
 
 #=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression "Set file permissions..."
-
-myynh_fix_file_permissions
-
-#=================================================
 # SYSTEM CONFIGURATION
 #=================================================
 ynh_script_progression "Adding system configurations related to $app..."
