@@ -3,12 +3,6 @@ Description=zigbee2mqtt
 After=network.target
 
 [Service]
-# https://www.zigbee2mqtt.io/guide/configuration/#configuration
-# Overwrite ./data/configuration.yaml
-Environment="ZIGBEE2MQTT_CONFIG_FRONTEND_HOST=127.0.0.1"
-Environment="ZIGBEE2MQTT_CONFIG_FRONTEND_PORT=__PORT__"
-Environment="ZIGBEE2MQTT_CONFIG_SERIAL_PORT=__SERIAL_PORT__"
-
 Type=simple
 User=__APP__
 Group=__APP__
