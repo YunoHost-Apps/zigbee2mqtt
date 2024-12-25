@@ -11,7 +11,6 @@ maintainers = ["Jens Diemer"]
 
 [upstream]
 license = "GPL-3.0-or-later"
-admindoc = "https://github.com/YunoHost-Apps/zigbee2mqtt_ynh"
 userdoc = "https://github.com/Koenkk/zigbee2mqtt"
 code = "https://github.com/YunoHost-Apps/zigbee2mqtt_ynh"
 
