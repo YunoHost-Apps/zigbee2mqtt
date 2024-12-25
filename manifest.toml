@@ -3,7 +3,8 @@ packaging_format = 2
 
 id = "zigbee2mqtt"
 name = "Zigbee2MQTT"
-description.en = "Zigbee2MQTT as YunoHost package"
+description.en = "Zigbee to MQTT bridge"
+description.fr = "Pont Zigbee vers MQTT"
 
 version = "1.42.0~ynh1"
 
@@ -38,7 +39,6 @@ ram.runtime = "50M"
 
     [install.init_main_permission]
     type = "group"
-    default = "admins"
 
     [install.serial_port]
     ask.en = "Serial port of our Zigbee adapter"
