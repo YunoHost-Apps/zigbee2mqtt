@@ -17,6 +17,8 @@ ynh_script_progression "Create and setup environment..."
 
 ynh_setup_source --dest_dir="$install_dir"
 
+touch /dev/ttyUSB0
+
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
